@@ -1,0 +1,196 @@
+## Postman Testing Guide - Solar Reward Wallet System
+
+### Prerequisites
+
+1. Install Postman (desktop app or web version)
+2. Save the code as `server.js`
+3. Run `npm init -y` and `npm install express` in your project directory
+4. Start the server with `node server.js`
+5. Ensure the server is running at: `http://localhost:3000`
+
+---
+
+### Postman Setup
+
+#### Step 1: Create a New Collection
+
+* Open Postman
+* Click "Collections" in the left sidebar
+* Click "+" or "Create Collection"
+* Name: `Solar Reward System API`
+* Description: `Testing endpoints for solar reward wallet system`
+* Click "Create"
+
+#### Step 2: Set Up Environment (Recommended)
+
+* Click the gear icon (⚙️) in the top right corner
+* Click "Add" under Environments
+* Environment Name: `Local Development`
+* Variable: `baseUrl` → `http://localhost:3000`
+* Click "Add"
+* Select "Local Development" from environment dropdown
+
+---
+
+### Test Cases
+
+#### 1. Health Check
+
+* **Name**: Health Check
+* **Method**: GET
+* **URL**: `{{baseUrl}}/health`
+
+#### 2. Get All Users
+
+* **Name**: Get All Users
+* **Method**: GET
+* **URL**: `{{baseUrl}}/users`
+
+#### 3. Get All Projects
+
+* **Name**: Get All Projects
+* **Method**: GET
+* **URL**: `{{baseUrl}}/projects`
+
+#### 4. Get All Subscriptions
+
+* **Name**: Get All Subscriptions
+* **Method**: GET
+* **URL**: `{{baseUrl}}/subscriptions`
+
+#### 5. Get User Wallet - Alice (Before Rewards)
+
+* **Name**: Get Alice Wallet - Before
+* **Method**: GET
+* **URL**: `{{baseUrl}}/user/1/wallet`
+
+#### 6. Distribute Rewards - Sunrise Solar Farm
+
+* **Name**: Distribute Rewards - Project 1
+* **Method**: POST
+* **URL**: `{{baseUrl}}/rewards/distribute`
+* **Headers**:
+
+  * `Content-Type: application/json`
+* **Body (JSON)**:
+
+```json
+{
+  "projectId": 1,
+  "kWh_generated": 1000
+}
+```
+
+#### 7. Verify Updated Wallet - Alice (After Rewards)
+
+* **Name**: Get Alice Wallet - After
+* **Method**: GET
+* **URL**: `{{baseUrl}}/user/1/wallet`
+
+#### 8. Get User Wallet - Bob
+
+* **Name**: Get Bob Wallet
+* **Method**: GET
+* **URL**: `{{baseUrl}}/user/2/wallet`
+
+#### 9. Distribute Rewards - Desert Wind & Solar
+
+* **Name**: Distribute Rewards - Project 2
+* **Method**: POST
+* **URL**: `{{baseUrl}}/rewards/distribute`
+* **Headers**:
+
+  * `Content-Type: application/json`
+* **Body (JSON)**:
+
+```json
+{
+  "projectId": 2,
+  "kWh_generated": 500
+}
+```
+
+#### 10. Get User Wallet - Carol
+
+* **Name**: Get Carol Wallet
+* **Method**: GET
+* **URL**: `{{baseUrl}}/user/3/wallet`
+
+---
+
+### Error Testing
+
+#### 11. Invalid Project
+
+* **Name**: Error Test - Invalid Project
+* **Method**: POST
+* **URL**: `{{baseUrl}}/rewards/distribute`
+* **Headers**: `Content-Type: application/json`
+* **Body (JSON)**:
+
+```json
+{
+  "projectId": 999,
+  "kWh_generated": 1000
+}
+```
+
+#### 12. Missing Data
+
+* **Name**: Error Test - Missing Data
+* **Method**: POST
+* **URL**: `{{baseUrl}}/rewards/distribute`
+* **Headers**: `Content-Type: application/json`
+* **Body (JSON)**:
+
+```json
+{
+  "projectId": 1
+}
+```
+
+#### 13. Invalid User ID
+
+* **Name**: Error Test - Invalid User
+* **Method**: GET
+* **URL**: `{{baseUrl}}/user/999/wallet`
+
+---
+
+### Postman Tips
+
+#### Organizing Collection
+
+* Create folders:
+
+  * `Setup & Info`: Health, Users, Projects, Subscriptions
+  * `Reward Distribution`: POST reward routes
+  * `Wallet Checks`: Individual user wallet requests
+  * `Error Testing`: Invalid requests
+
+#### Use Variables
+
+* Prefer `{{baseUrl}}` over hardcoded URLs
+* Add variables for projectId and userId
+
+#### Recommended Test Flow
+
+1. Health Check
+2. Retrieve All Users, Projects, Subscriptions
+3. Fetch Wallets Before Rewards
+4. Distribute Rewards
+5. Verify Wallets After Rewards
+6. Test Error Handling
+
+#### Additional Features
+
+* Use "Save Response" for reference
+* Add tests in the "Tests" tab (e.g., status code check)
+* Create environments for staging or production
+* Use Collection Runner to run tests in sequence
+
+#### Keyboard Shortcuts
+
+* `Ctrl/Cmd + Enter`: Send request
+* `Ctrl/Cmd + S`: Save request
+* `Ctrl/Cmd + D`: Duplicate request
